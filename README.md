@@ -1,6 +1,6 @@
-# TaxNova - AI-Powered Tax Intelligence for SMEs
+# TaxNova - AI-Powered Tax Intelligence Platform
 
-> **Transform complex tax compliance into intelligent automation with AI agents**
+> **Transform complex tax compliance into intelligent automation with AI agents for Salaried Individuals and SMEs**
 
 [![Next.js](https://img.shields.io/badge/Next.js-15-black)](https://nextjs.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688)](https://fastapi.tiangolo.com/)
@@ -11,7 +11,21 @@
 
 ## 🎯 The Problem
 
-Small and Medium Enterprises (SMEs) in India face critical challenges in tax management that directly impact their bottom line:
+Tax compliance in India is complex and costly for both individuals and businesses. **TaxNova addresses pain points across two key segments:**
+
+### For Salaried Individuals
+
+- **₹15,000 - ₹50,000** lost annually due to missed deductions and regime selection errors
+- **5-8 hours** spent filling ITR forms and consulting CAs
+- **₹5,000 - ₹15,000** in CA fees for basic tax filing
+- Confusion between Old vs. New tax regime benefits
+- Lack of personalized guidance on HRA, 80C, 80D optimizations
+
+**Real Example:** A software engineer earning ₹15 LPA paid ₹78,000 in tax under New Regime, but could have saved ₹22,000 by choosing Old Regime with proper HRA and 80C planning.
+
+### For Small and Medium Enterprises (SMEs)
+
+Small and Medium Enterprises in India face critical challenges in tax management that directly impact their bottom line:
 
 ### Financial Impact
 - **₹50,000 - ₹3,00,000** lost annually due to missed tax deductions
@@ -63,18 +77,33 @@ As businesses grow:
 
 ## 💡 Our Solution: TaxNova
 
-**TaxNova** is an AI-powered tax intelligence platform that acts as a virtual CA assistant, combining multi-agent AI systems with domain expertise to deliver instant, accurate tax optimization.
+**TaxNova** is an AI-powered tax intelligence platform that serves both **Salaried Individuals** and **SMEs**. Acting as a virtual CA assistant, it combines multi-agent AI systems with domain expertise to deliver instant, accurate tax optimization.
 
 ### How It Works
 
+**For Salaried Individuals:**
 ```mermaid
 graph LR
-    A[Upload Documents] --> B[AI Document Parser]
+    A[Upload Salary Slip] --> B[Payroll Parser]
+    B --> C[Conversational CA Agent]
+    C --> D[HRA Calculator]
+    C --> E[80C/80D Optimizer]
+    C --> F[Regime Comparator]
+    D --> G[Tax Savings Report]
+    E --> G
+    F --> G
+    G --> H[PDF Tax Plan]
+```
+
+**For SMEs:**
+```mermaid
+graph LR
+    A[Upload Business Docs] --> B[Document Parser]
     B --> C[Orchestrator Agent]
     C --> D[Deduction Finder Agent]
     C --> E[GST Matcher Agent]
     C --> F[Tax Query Agent]
-    D --> G[Unified Dashboard]
+    D --> G[Business Dashboard]
     E --> G
     F --> G
     G --> H[Actionable Insights]
@@ -304,6 +333,206 @@ AI: Yes! I see ₹45,000 in training expenses (Bill #TR-2024-08). This qualifies
 ```
 
 ---
+
+## 🎓 Features for Salaried Individuals
+
+### 1. 💬 Conversational CA Chat
+
+**What It Does:**
+An intelligent chat interface that guides you through tax optimization like a real CA would – asking questions, understanding your financial situation, and providing personalized advice.
+
+**Key Capabilities:**
+
+#### a) Natural Language Understanding
+Talk to TaxNova like you would with your CA:
+- "I pay ₹15,000 rent per month"
+- "I have LIC premium of ₹1.2 lakhs"
+- "Should I choose old or new regime?"
+
+The AI extracts financial information automatically and updates your tax profile in real-time.
+
+#### b) Guided Interview Process
+Structured conversation flow:
+1. **Payroll Parsing**: Upload salary slip → AI extracts gross, basic, HRA, PF
+2. **Personal Details**: City (Metro/Non-Metro), rent paid, dependents
+3. **Investments**: 80C (PF, ELSS, PPF, LIC), 80D (Health insurance)
+4. **Analysis Trigger**: Once complete, AI automatically calculates tax
+
+**Example Conversation:**
+```
+AI: Hello! I'm TaxNova. May I know your name?
+User: Hi, I'm Priya
+
+AI: Hi Priya! To start, are you currently opting for Old or New Tax Regime?
+User: I'm not sure which one is better for me
+
+AI: No problem! I'll help you figure that out. Let me ask a few questions. 
+    Do you pay rent? If yes, how much monthly?
+User: Yes, ₹20,000 per month
+
+AI: Got it - ₹2.4L annually. Do you have any investments like PPF, ELSS, or LIC?
+User: I have PF deduction of ₹90K from salary and ₹30K in ELSS
+
+AI: Perfect! Based on your profile, Old Regime will save you ₹18,500 more. 
+    Let me show you the detailed breakdown...
+```
+
+#### c) Context Retention
+Unlike basic chatbots:
+- Remembers entire conversation history
+- Understands references ("the amount you mentioned earlier")
+- Builds progressive knowledge base
+
+---
+
+### 2. 🏠 HRA Exemption Optimizer
+
+**What It Does:**
+Automatically calculates the maximum HRA exemption you can claim based on complex Income Tax rules.
+
+**The Challenge:**
+HRA exemption is the LEAST of:
+1. Actual HRA received
+2. Rent paid - 10% of basic salary
+3. 50% of basic (Metro) or 40% (Non-Metro)
+
+Most people claim the wrong amount or don't claim at all.
+
+**TaxNova's Solution:**
+- Extracts Basic Salary and HRA from payslip automatically
+- Asks about rent paid and city type
+- Calculates all 3 rules and picks minimum
+- Shows why that amount was chosen
+
+**Example Output:**
+```
+📊 HRA Exemption Analysis
+
+Your Details:
+- Basic Salary: ₹7,50,000
+- HRA Received: ₹3,75,000
+- Rent Paid: ₹2,40,000 (Metro)
+
+Calculation:
+Rule 1 (Actual HRA): ₹3,75,000
+Rule 2 (Rent - 10% Basic): ₹2,40,000 - ₹75,000 = ₹1,65,000 ✓ MINIMUM
+Rule 3 (50% Basic - Metro): ₹3,75,000
+
+💡 Your HRA Exemption: ₹1,65,000
+💰 Taxable HRA: ₹2,10,000
+
+⚠️ Tip: Increasing rent to ₹2,85,000/year would maximize your exemption!
+```
+
+---
+
+### 3. 💰 80C & 80D Investment Advisor
+
+**What It Does:**
+Analyzes your current deductions under Section 80C (₹1.5L limit) and 80D (₹25K limit) and suggests how to maximize tax savings.
+
+**Key Features:**
+
+#### a) Current Utilization
+Tracks what you've already invested:
+- Employee PF (auto-deducted from salary)
+- ELSS mutual funds
+- LIC premiums
+- PPF deposits
+- Home loan principal
+- Children's tuition fees
+
+#### b) Gap Analysis
+```
+Section 80C Status:
+✅ PF Contribution: ₹90,000
+✅ ELSS Investment: ₹30,000
+Total Utilized: ₹1,20,000
+Remaining: ₹30,000
+
+💡 Recommendation: Invest ₹30,000 more in ELSS or PPF
+💰 Additional Tax Saving: ₹9,300 (at 31% slab)
+```
+
+#### c) Smart Suggestions
+Based on your gap:
+- If ₹30K gap → "Invest ₹30K in ELSS for equity exposure"
+- If ₹1L gap → "Max out PPF (₹1.5L) for guaranteed returns"
+- If ₹0 gap → "You've maximized 80C! Consider NPS for extra ₹50K deduction"
+
+**Section 80D (Health Insurance):**
+```
+Current Premium: ₹8,000 (self)
+Limit: ₹25,000
+Gap: ₹17,000
+
+💡 Recommendation: Add parents' mediclaim (₹15K) + preventive checkup (₹5K)
+💰 Additional Saving: ₹6,200
+```
+
+---
+
+### 4. ⚖️ Old vs. New Regime Comparator
+
+**What It Does:**
+Calculates your tax liability under BOTH regimes and recommends the better option.
+
+**The Complexity:**
+- **New Regime**: Lower slabs but NO deductions (except standard ₹50K)
+- **Old Regime**: Higher slabs but allows HRA, 80C, 80D, etc.
+
+Most salaried individuals choose the wrong one!
+
+**TaxNova's Analysis:**
+
+**Scenario: Software Engineer, ₹15 LPA CTC**
+
+| Component | Old Regime | New Regime |
+|-----------|-----------|------------|
+| Gross Salary | ₹15,00,000 | ₹15,00,000 |
+| Standard Deduction | -₹50,000 | -₹50,000 |
+| HRA Exemption | -₹1,20,000 | ₹0 |
+| 80C (PF + ELSS) | -₹1,50,000 | ₹0 |
+| 80D (Health) | -₹15,000 | ₹0 |
+| Professional Tax | -₹2,400 | -₹2,400 |
+| **Taxable Income** | **₹11,62,600** | **₹14,47,600** |
+| **Tax Liability** | **₹56,130** | **₹78,380** |
+| **Difference** | ✅ Save ₹22,250 with Old Regime | |
+
+**Verdict:** Old Regime is ₹22,250 cheaper!
+
+**When New Regime Wins:**
+- No HRA (own house)
+- Low 80C investments
+- Income < ₹10L (rebate benefit)
+
+---
+
+### 5. 📄 Downloadable Tax Plan PDF
+
+**What It Does:**
+Generates a professional CA-style tax plan document with all calculations, recommendations, and action steps.
+
+**Included in PDF:**
+1. **Executive Summary**: Tax liability, potential savings, recommended regime
+2. **Income Breakdown**: Salary components, exemptions, deductions
+3. **Calculation Sheet**: Detailed tax computation (both regimes)
+4. **Evidence**: Uploaded salary slips, investment proofs
+5. **Action Items**: 
+   - Increase rent agreement to ₹X for max HRA
+   - Invest ₹Y more in 80C before March 31
+   - Buy health insurance for parents (₹Z premium)
+6. **Disclaimer**: For reference only, consult CA for filing
+
+**Use Cases:**
+- Share with employer's HR for regime selection
+- Show to CA during ITR filing
+- Keep for your records
+- Use for financial planning
+
+---
+
+## 🏢 Features for SMEs
 
 ### 4. 📊 Unified SME Dashboard
 
