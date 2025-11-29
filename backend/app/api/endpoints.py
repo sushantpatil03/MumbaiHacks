@@ -46,8 +46,8 @@ async def upload_document(
     file: Optional[UploadFile] = File(None),
     use_sample: str = Form("false"),
     sample_name: str = Form("sample_salary_rajesh"),
-    name: str = Form(None),
-    tax_regime: str = Form(None)
+    name: Optional[str] = Form(None),
+    tax_regime: Optional[str] = Form(None)
 ):
     print(f"DEBUG: file={file}, use_sample={use_sample}, sample_name={sample_name}, name={name}, regime={tax_regime}")
     use_sample_bool = use_sample.lower() == "true"
@@ -92,11 +92,13 @@ async def upload_document(
              raise HTTPException(status_code=500, detail=f"Error loading sample: {e}")
     else:
         # Process uploaded file
-        if not file:
-            raise HTTPException(status_code=400, detail="No file uploaded")
-        
-        content = await file.read()
-        parsed_payroll = await mock_ocr_parse(content)
+        if file:
+            content = await file.read()
+            parsed_payroll = await mock_ocr_parse(content)
+        else:
+            # User skipped upload
+            logger.info("User skipped file upload. Creating empty profile.")
+            parsed_payroll = None
 
     # Initialize Profile
     profile = UserProfile(

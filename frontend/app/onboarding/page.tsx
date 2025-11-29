@@ -17,6 +17,22 @@ export default function OnboardingPage() {
     const [regime, setRegime] = useState<"Old" | "New" | null>(null)
     const [file, setFile] = useState<File | null>(null)
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const [loadingMsg, setLoadingMsg] = useState("")
+
+    const uploadMessages = [
+        "Analyzing document structure...",
+        "Extracting salary components...",
+        "Identifying tax regime...",
+        "Calculating potential deductions...",
+        "Preparing your personalized agent..."
+    ]
+
+    const skipMessages = [
+        "Initializing secure session...",
+        "Setting up your profile...",
+        "Configuring tax rules...",
+        "Preparing your personalized agent..."
+    ]
 
     const handleNext = () => {
         if (step === 1 && !name) return toast.error("Please enter your name")
@@ -26,25 +42,36 @@ export default function OnboardingPage() {
 
     const handleSubmit = async () => {
         setIsSubmitting(true)
+
+        // Select message set
+        const messages = file ? uploadMessages : skipMessages
+
+        // Rotate messages
+        let msgIdx = 0
+        setLoadingMsg(messages[0])
+        const interval = setInterval(() => {
+            msgIdx = (msgIdx + 1) % messages.length
+            setLoadingMsg(messages[msgIdx])
+        }, 1500)
+
         const formData = new FormData()
         formData.append("name", name)
         formData.append("tax_regime", regime || "New")
 
         if (file) {
             formData.append("file", file)
-        } else {
-            // If no file, use sample or just skip? 
-            // User request says "user can choose to even skip this step"
-            // If skipped, we just don't send a file. Backend handles it.
         }
 
         try {
             const res = await api.post("/upload", formData)
             const jobId = res.data.job_id
+            clearInterval(interval)
+            setLoadingMsg("Done! Redirecting...")
             toast.success("Profile created! Redirecting...")
             router.push(`/consult/${jobId}`)
         } catch (error) {
             console.error(error)
+            clearInterval(interval)
             toast.error("Something went wrong. Please try again.")
             setIsSubmitting(false)
         }
@@ -140,8 +167,8 @@ export default function OnboardingPage() {
                                 <div
                                     onClick={() => setRegime("Old")}
                                     className={`p-8 rounded-3xl border-2 cursor-pointer transition-all duration-300 ${regime === "Old"
-                                        ? "border-blue-500 bg-blue-500/10 scale-105 shadow-xl shadow-blue-500/20"
-                                        : "border-white/10 bg-white/5 hover:border-white/30 hover:bg-white/10"
+                                            ? "border-blue-500 bg-blue-500/10 scale-105 shadow-xl shadow-blue-500/20"
+                                            : "border-white/10 bg-white/5 hover:border-white/30 hover:bg-white/10"
                                         }`}
                                 >
                                     <Shield className="w-10 h-10 text-blue-400 mb-4 mx-auto" />
@@ -154,8 +181,8 @@ export default function OnboardingPage() {
                                 <div
                                     onClick={() => setRegime("New")}
                                     className={`p-8 rounded-3xl border-2 cursor-pointer transition-all duration-300 ${regime === "New"
-                                        ? "border-purple-500 bg-purple-500/10 scale-105 shadow-xl shadow-purple-500/20"
-                                        : "border-white/10 bg-white/5 hover:border-white/30 hover:bg-white/10"
+                                            ? "border-purple-500 bg-purple-500/10 scale-105 shadow-xl shadow-purple-500/20"
+                                            : "border-white/10 bg-white/5 hover:border-white/30 hover:bg-white/10"
                                         }`}
                                 >
                                     <FileText className="w-10 h-10 text-purple-400 mb-4 mx-auto" />
@@ -222,18 +249,33 @@ export default function OnboardingPage() {
                                 </div>
                             </div>
 
-                            <div className="flex gap-4 justify-center pt-4">
-                                <Button variant="ghost" onClick={() => setStep(2)} className="text-white/60">
-                                    Back
-                                </Button>
-                                <Button
-                                    size="lg"
-                                    onClick={handleSubmit}
-                                    disabled={isSubmitting}
-                                    className="h-14 px-12 rounded-full text-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:opacity-90 hover:scale-105 transition-all shadow-lg shadow-purple-500/25"
-                                >
-                                    {isSubmitting ? "Creating Profile..." : (file ? "Start Analysis" : "Skip & Start Chat")}
-                                </Button>
+                            <div className="flex flex-col items-center gap-4 pt-4">
+                                <div className="flex gap-4 justify-center">
+                                    <Button variant="ghost" onClick={() => setStep(2)} className="text-white/60">
+                                        Back
+                                    </Button>
+                                    <Button
+                                        size="lg"
+                                        onClick={handleSubmit}
+                                        disabled={isSubmitting}
+                                        className="h-14 px-12 rounded-full text-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:opacity-90 hover:scale-105 transition-all shadow-lg shadow-purple-500/25 min-w-[200px]"
+                                    >
+                                        {isSubmitting ? "Processing..." : (file ? "Start Analysis" : "Skip & Start Chat")}
+                                    </Button>
+                                </div>
+
+                                <AnimatePresence>
+                                    {isSubmitting && (
+                                        <motion.div
+                                            initial={{ opacity: 0, y: 10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: -10 }}
+                                            className="text-white/60 text-sm animate-pulse"
+                                        >
+                                            {loadingMsg}
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
                             </div>
                         </motion.div>
                     )}
