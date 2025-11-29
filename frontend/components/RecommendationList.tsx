@@ -13,9 +13,10 @@ interface Recommendation {
     id: string
     title: string
     description: string
-    required_amount: number
-    estimated_tax_savings: number
-    feasibility: string
+    category: string
+    potential_savings: number
+    action_type: string
+    feasibility?: string // Optional now as it might not be in new schema, but keeping for safety
 }
 
 interface RecommendationListProps {
@@ -81,13 +82,12 @@ export function RecommendationList({ jobId, recommendations, onApply }: Recommen
                                     <div className="flex items-center gap-2">
                                         <h3 className="font-semibold text-white">{rec.title}</h3>
                                         <Badge variant="secondary" className="bg-white/10 text-white/80 text-[10px]">
-                                            {rec.feasibility}
+                                            {rec.action_type || "Action"}
                                         </Badge>
                                     </div>
                                     <p className="text-sm text-white/60">{rec.description}</p>
                                     <div className="flex gap-4 mt-2 text-sm">
-                                        <span className="text-white/40">Invest: <span className="text-white">₹{rec.required_amount.toLocaleString()}</span></span>
-                                        <span className="text-green-400 font-medium">Save: ₹{rec.estimated_tax_savings.toLocaleString()}</span>
+                                        <span className="text-green-400 font-medium">Potential Savings: ₹{rec.potential_savings?.toLocaleString() || 0}</span>
                                     </div>
                                 </div>
 

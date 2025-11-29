@@ -3,7 +3,7 @@ from typing import Optional, List
 import uuid
 import json
 import os
-from app.models.schemas import UserProfile, ParsedPayroll
+from app.models.schemas import UserProfile, ParsedPayroll, LoopholeStrategy
 from app.utils.ocr import mock_ocr_parse
 from app.agents.langgraph_pipeline import interview_agent, observation_agent
 from app.rules.deductions import analyze_tax_situation
@@ -363,16 +363,31 @@ async def get_agent_status(job_id: str):
     
     return status
 
-@router.get("/download/plan/{job_id}")
-async def download_plan(job_id: str):
-    if job_id not in profiles_db:
-        raise HTTPException(status_code=404, detail="Profile not found")
-        
-    profile = profiles_db[job_id]
-    pdf_content = generate_pdf_plan(profile)
-    
     return Response(
         content=pdf_content,
         media_type="application/pdf",
         headers={"Content-Disposition": f"attachment; filename=tax_plan_{job_id}.pdf"}
     )
+
+@router.post("/analyze/loopholes/{job_id}")
+async def analyze_loopholes(job_id: str):
+    from app.agents.loophole_agent import generate_loopholes, LoopholeIdea
+    
+    if job_id not in profiles_db:
+        raise HTTPException(status_code=404, detail="Profile not found")
+        
+    profile = profiles_db[job_id]
+    
+    # Generate loopholes
+    try:
+        strategies_data = generate_loopholes(profile)
+        # Convert dicts to Pydantic models
+        strategies = [LoopholeStrategy(**s) for s in strategies_data]
+        
+        profile.loopholes = strategies
+        save_profile(profile)
+        
+        return {"strategies": strategies}
+    except Exception as e:
+        logger.error(f"Loophole analysis failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))

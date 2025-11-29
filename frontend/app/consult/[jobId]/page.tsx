@@ -8,6 +8,7 @@ import { RecommendationList } from "@/components/RecommendationList"
 import { SavingsBanner } from "@/components/SavingsBanner"
 import { AgentCards } from "@/components/AgentCards"
 import { DebugConsole } from "@/components/DebugConsole"
+import { LoopholeVault } from "@/components/LoopholeVault"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { api } from "@/lib/api"
@@ -119,6 +120,11 @@ export default function ConsultPage() {
                             </div>
                         )}
                     </div>
+                </div>
+
+                {/* Loophole Vault Section */}
+                <div className="pt-8 border-t border-white/10">
+                    <LoopholeVault jobId={jobId} />
                 </div>
             </div>
 
