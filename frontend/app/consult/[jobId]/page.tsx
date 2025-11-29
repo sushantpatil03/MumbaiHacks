@@ -7,6 +7,7 @@ import { ObservationsGrid } from "@/components/ObservationsGrid"
 import { RecommendationList } from "@/components/RecommendationList"
 import { SavingsBanner } from "@/components/SavingsBanner"
 import { AgentCards } from "@/components/AgentCards"
+import { DebugConsole } from "@/components/DebugConsole"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { api } from "@/lib/api"
@@ -89,27 +90,7 @@ export default function ConsultPage() {
                             }}
                         />
 
-                        <Card className="glass-card p-6">
-                            <h3 className="text-lg font-semibold text-white mb-4">Profile Summary</h3>
-                            <div className="space-y-2 text-sm text-white/70">
-                                <div className="flex justify-between">
-                                    <span>Basic Salary</span>
-                                    <span className="text-white">₹{profile.parsed_payroll?.basic_salary.toLocaleString()}</span>
-                                </div>
-                                <div className="flex justify-between">
-                                    <span>HRA Received</span>
-                                    <span className="text-white">₹{profile.parsed_payroll?.hra_received.toLocaleString()}</span>
-                                </div>
-                                <div className="flex justify-between">
-                                    <span>Rent Paid</span>
-                                    <span className="text-white">₹{profile.rent_annually?.toLocaleString() || 0}</span>
-                                </div>
-                                <div className="flex justify-between">
-                                    <span>80C Investments</span>
-                                    <span className="text-white">₹{profile.investments_80c?.toLocaleString() || 0}</span>
-                                </div>
-                            </div>
-                        </Card>
+                        <DebugConsole data={profile} />
                     </div>
 
                     {/* Right Column: Insights */}
