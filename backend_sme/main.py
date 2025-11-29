@@ -31,6 +31,8 @@ app.add_middleware(
 # Include Routes
 app.include_router(deductions.router, prefix="/sme/deductions", tags=["Deductions"])
 app.include_router(gst_matcher.router, prefix="/sme/gst", tags=["GST Matcher"])
+from backend_sme.routes import chat
+app.include_router(chat.router, prefix="/sme/chat", tags=["Chat"])
 
 @app.get("/")
 def read_root():

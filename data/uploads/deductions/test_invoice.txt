@@ -1,0 +1,13 @@
+
+    INVOICE
+    Date: 2023-10-01
+    Item: Office Laptop
+    Amount: 50000
+    Vendor: Dell India
+    
+    INVOICE
+    Date: 2023-10-05
+    Item: Team Lunch
+    Amount: 5000
+    Vendor: Pizza Hut
+    

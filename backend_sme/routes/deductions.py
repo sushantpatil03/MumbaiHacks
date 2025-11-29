@@ -1,6 +1,7 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException
 from backend_sme.agents.deduction_agent import run_deduction_agent
 from backend_sme.models.schemas import DeductionResponse
+from backend_sme.utils.file_parser import parse_file_content
 import shutil
 import os
 
@@ -30,13 +31,10 @@ async def run_deduction_analysis():
         for filename in os.listdir(UPLOAD_DIR):
             file_path = os.path.join(UPLOAD_DIR, filename)
             if os.path.isfile(file_path):
-                # Simple text reading for MVP. 
-                # For PDF/Excel, we would need specific parsers (e.g., PyPDF2, pandas).
-                # Assuming user uploads CSV or text for now as per "hackathon-ready" simplicity.
                 try:
-                    with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
-                        combined_content += f"\n--- File: {filename} ---\n"
-                        combined_content += f.read()
+                    content = parse_file_content(file_path)
+                    combined_content += f"\n--- File: {filename} ---\n"
+                    combined_content += content
                 except Exception as e:
                     print(f"Skipping file {filename}: {e}")
         

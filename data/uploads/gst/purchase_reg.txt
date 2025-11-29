@@ -1,0 +1,6 @@
+
+    Purchase Register
+    Invoice: INV-001, Vendor: ABC Corp, Amount: 10000, Tax: 1800
+    Invoice: INV-002, Vendor: XYZ Ltd, Amount: 20000, Tax: 3600
+    Invoice: INV-003, Vendor: PQR Ent, Amount: 5000, Tax: 900
+    
