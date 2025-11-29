@@ -1,4 +1,5 @@
 import io
+import json
 from pypdf import PdfReader
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
@@ -25,6 +26,8 @@ async def mock_ocr_parse(file_content: bytes) -> ParsedPayroll:
             text += page.extract_text() + "\n"
             
         logger.debug(f"Extracted text length: {len(text)}")
+        logger.debug(f"Text Snippet: {text[:200]}...")
+        
         if len(text) < 50:
             logger.warning("Extracted text is very short. PDF might be an image scan.")
             # Fallback or error? For now, let's try to proceed or return default
@@ -55,7 +58,7 @@ async def mock_ocr_parse(file_content: bytes) -> ParsedPayroll:
             "format_instructions": parser.get_format_instructions()
         })
         
-        logger.info(f"Successfully parsed data: {parsed_data}")
+        logger.info(f"✅ Successfully parsed data:\n{json.dumps(parsed_data.dict(), indent=2)}")
         return parsed_data
 
     except Exception as e:

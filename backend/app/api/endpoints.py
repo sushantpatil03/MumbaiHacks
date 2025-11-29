@@ -81,6 +81,17 @@ async def upload_document(
         parsed_payroll=parsed_payroll
     )
     
+    # Sync Parsed Data to Knowledge Base for Agent Context
+    if parsed_payroll:
+        profile.financial_knowledge_base.update({
+            "gross_salary": parsed_payroll.gross_salary,
+            "basic_salary": parsed_payroll.basic_salary,
+            "hra_received": parsed_payroll.hra_received,
+            "pf_deducted": parsed_payroll.pf,
+            "allowances": parsed_payroll.allowances
+        })
+        logger.info(f"Synced parsed payroll to knowledge base: {profile.financial_knowledge_base}")
+    
     # Trigger Initial Greeting
     try:
         logger.info(f"Triggering initial greeting for job_id: {job_id}")
@@ -94,6 +105,7 @@ async def upload_document(
         })
 
     profiles_db[job_id] = profile
+    save_profile(profile)
     
     return {"job_id": job_id}
 
@@ -109,9 +121,14 @@ async def chat_with_agent(
     user_message: str = Form(""),
     file: Optional[UploadFile] = File(None)
 ):
+    # Load if not in memory
     if job_id not in profiles_db:
-        raise HTTPException(status_code=404, detail="Profile not found")
-    
+        loaded = load_profile(job_id)
+        if loaded:
+            profiles_db[job_id] = loaded
+        else:
+            raise HTTPException(status_code=404, detail="Job ID not found")
+            
     profile = profiles_db[job_id]
     
     # Handle File Upload in Chat
@@ -124,7 +141,18 @@ async def chat_with_agent(
         try:
             # Reuse mock OCR or simple text extraction
             parsed_data = await mock_ocr_parse(content)
-            parsed_text += f"\nExtracted Data: {parsed_data.dict()}"
+            parsed_text += f"\nExtracted Data: {json.dumps(parsed_data.dict(), indent=2)}"
+            
+            # Sync extracted data to KB
+            if parsed_data:
+                profile.financial_knowledge_base.update({
+                    "gross_salary": parsed_data.gross_salary,
+                    "basic_salary": parsed_data.basic_salary,
+                    "hra_received": parsed_data.hra_received,
+                    "pf_deducted": parsed_data.pf,
+                    "allowances": parsed_data.allowances
+                })
+                
         except Exception as e:
             logger.error(f"File parsing failed: {e}")
             parsed_text += f"\n(Parsing failed: {str(e)})"
@@ -140,8 +168,9 @@ async def chat_with_agent(
         logger.error(f"Agent processing failed: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Agent Error: {str(e)}")
     
-    # Update DB
+    # Update DB and Save to Disk
     profiles_db[job_id] = updated_profile
+    save_profile(updated_profile)
     
     return {
         "agent_reply": agent_reply,
@@ -151,7 +180,12 @@ async def chat_with_agent(
 @router.get("/observations/{job_id}")
 async def get_observations(job_id: str):
     if job_id not in profiles_db:
-        raise HTTPException(status_code=404, detail="Profile not found")
+        # Try loading from disk
+        profile = load_profile(job_id)
+        if profile:
+            profiles_db[job_id] = profile
+        else:
+            raise HTTPException(status_code=404, detail="Profile not found")
         
     profile = profiles_db[job_id]
     

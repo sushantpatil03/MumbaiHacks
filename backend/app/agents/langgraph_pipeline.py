@@ -48,10 +48,12 @@ class OrchestratorAgent:
         2. Decide Action -> (Interview / Analyze / Report)
         3. Generate Response
         """
-        logger.debug(f"Orchestrator processing message: {user_message[:50]}...")
+        logger.info(f"🤖 AGENT: Processing message from User: '{user_message}'")
+        logger.debug(f"Current Profile Status: {profile.status}")
         
         # Fallback for empty message
         if not user_message:
+            logger.warning("Received empty user message.")
             return "I didn't catch that. Could you please say it again?", profile
 
         knowledge_update = KnowledgeUpdate(extracted_info={}, user_intent="unknown")
@@ -68,12 +70,15 @@ class OrchestratorAgent:
             ])
             
             try:
-                logger.debug("Invoking extractor LLM...")
+                logger.debug("🧠 EXTRACTOR: Invoking LLM...")
+                kb_json = json.dumps(profile.financial_knowledge_base, default=str)
+                
                 knowledge_update: KnowledgeUpdate = (extraction_prompt | self.extractor_llm).invoke({
-                    "kb": json.dumps(profile.financial_knowledge_base, default=str),
+                    "kb": kb_json,
                     "message": user_message
                 })
-                logger.debug(f"Extracted info: {knowledge_update.extracted_info}")
+                logger.info(f"📥 EXTRACTED: {knowledge_update.extracted_info}")
+                logger.info(f"🎯 INTENT: {knowledge_update.user_intent}")
                 
                 # Update Knowledge Base
                 profile.financial_knowledge_base.update(knowledge_update.extracted_info)
@@ -86,7 +91,7 @@ class OrchestratorAgent:
                 if "health_insurance" in kb: profile.health_premium = int(kb["health_insurance"])
                 
             except Exception as e:
-                logger.error(f"Extraction Error: {e}")
+                logger.error(f"❌ Extraction Error: {e}", exc_info=True)
                 # Continue execution even if extraction fails
 
         # --- Step 2: Decision & Response ---
@@ -96,6 +101,7 @@ class OrchestratorAgent:
                          profile.investments_80c is not None and 
                          profile.health_premium is not None)
         
+        # Define the persona and rules
         # Define the persona and rules
         system_instruction = (
             "You are TaxNova, an intelligent Agentic CA. You are orchestrating a tax consultation. "
@@ -108,7 +114,9 @@ class OrchestratorAgent:
             "INTERVIEW SCRIPT:\n"
             "1. If this is the start (no name), ask: 'Hello! I'm TaxNova. May I know your name?'\n"
             "2. If name is known but Tax Regime is unknown, ask: 'Hi {name}, nice to meet you! To start, are you currently opting for the Old or New Tax Regime?'\n"
-            "3. If Regime is known, proceed to gather financial details (Rent, Investments, Insurance).\n"
+            "3. If Regime is known:\n"
+            "   - If 'Old Regime': Ask for Rent, 80C (PF/PPF/ELSS), and Health Insurance to maximize deductions.\n"
+            "   - If 'New Regime': Explain that while deductions are limited, you'd like to check if the Old Regime saves more money. Ask for Rent/Investments specifically for this COMPARISON.\n"
             "4. If all core info is gathered, SUMMARIZE the profile and ASK to start analysis.\n"
             "5. If user agrees to analysis, set next_action='trigger_analysis'.\n"
             "6. If status is 'report', explain the key observations briefly and ask if they want to deep dive.\n"
@@ -120,7 +128,7 @@ class OrchestratorAgent:
         ])
         
         try:
-            logger.debug("Invoking decider LLM...")
+            logger.debug("🧠 DECIDER: Invoking LLM...")
             # If <START>, we pass a dummy message to the LLM to trigger the greeting
             msg_to_llm = "Start the conversation." if user_message == "<START>" else user_message
             
@@ -128,12 +136,14 @@ class OrchestratorAgent:
                 "system_instruction": system_instruction,
                 "message": msg_to_llm
             })
-            logger.debug(f"Decision: {decision.next_action}, Thought: {decision.thought_process}")
+            logger.info(f"🤔 THOUGHT: {decision.thought_process}")
+            logger.info(f"👉 ACTION: {decision.next_action}")
+            logger.info(f"🗣️ REPLY: {decision.reply_to_user}")
             
             # Handle Actions
             if decision.next_action == "trigger_analysis":
                 profile.status = "analyzing"
-                logger.info("Triggering analysis mode based on agent decision.")
+                logger.info("🚀 Triggering analysis mode based on agent decision.")
                 # Trigger analysis immediately
                 obs, recs = observation_agent.analyze(profile)
                 profile.observations = obs
@@ -149,7 +159,7 @@ class OrchestratorAgent:
                 response_text = decision.reply_to_user
             
         except Exception as e:
-            logger.error(f"Decision Error: {e}")
+            logger.error(f"❌ Decision Error: {e}", exc_info=True)
             response_text = "I'm having trouble connecting to my brain right now. Could you please repeat that?"
 
         # Update history

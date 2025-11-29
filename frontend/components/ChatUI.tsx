@@ -9,6 +9,8 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { api } from "@/lib/api"
 import { cn } from "@/lib/utils"
 import toast from "react-hot-toast"
+import ReactMarkdown from "react-markdown"
+import remarkGfm from "remark-gfm"
 
 interface ChatMessage {
     role: "user" | "agent"
@@ -127,7 +129,19 @@ export function ChatUI({ jobId, initialHistory = [], onUpdate }: ChatUIProps) {
                                             : "bg-white/5 text-white/90 rounded-tl-none border border-white/10"
                                     )}
                                 >
-                                    {msg.content}
+                                    <ReactMarkdown
+                                        className="prose prose-invert prose-sm max-w-none break-words"
+                                        remarkPlugins={[remarkGfm]}
+                                        components={{
+                                            p: ({ node, ...props }) => <p className="mb-2 last:mb-0" {...props} />,
+                                            ul: ({ node, ...props }) => <ul className="list-disc pl-4 mb-2" {...props} />,
+                                            ol: ({ node, ...props }) => <ol className="list-decimal pl-4 mb-2" {...props} />,
+                                            li: ({ node, ...props }) => <li className="mb-1" {...props} />,
+                                            strong: ({ node, ...props }) => <span className="font-bold text-white" {...props} />,
+                                        }}
+                                    >
+                                        {msg.content}
+                                    </ReactMarkdown>
                                 </div>
                             </div>
                         ))}

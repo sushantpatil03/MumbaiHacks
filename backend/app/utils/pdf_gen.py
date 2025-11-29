@@ -37,33 +37,35 @@ def generate_pdf_plan(profile: UserProfile) -> bytes:
         <p><strong>Job ID:</strong> {profile.job_id}</p>
         <p><strong>Date:</strong> 2024-11-27</p>
         
+        <h2>Key Observations</h2>
+        <ul>
+            {''.join([f"<li><strong>{obs['title']}</strong> ({obs['impact']}): {obs['description']}</li>" for obs in profile.observations])}
+        </ul>
+
+        <h2>Recommended Actions</h2>
+        <ul>
+            {''.join([f"<li><strong>{rec.title}</strong>: {rec.description} (Save ~₹{rec.estimated_tax_savings:,})</li>" for rec in profile.recommendations])}
+        </ul>
+        
+        <h2>Tax Calculation Summary</h2>
         <div class="summary-box">
-            <h2>Tax Summary</h2>
             <div class="stat">
                 <span>Gross Salary:</span>
                 <span>₹{profile.parsed_payroll.gross_salary:,}</span>
             </div>
             <div class="stat">
                 <span>Taxable Income (Old Regime):</span>
-                <span>₹{profile.parsed_payroll.gross_salary - analysis['hra_exempt'] - 50000 - analysis['util_80c'] - profile.health_premium:,}</span>
+                <span>₹{profile.parsed_payroll.gross_salary - analysis.get('hra_exempt', 0) - 50000 - analysis.get('util_80c', 0) - profile.health_premium:,}</span>
             </div>
              <div class="stat">
                 <span>Tax Liability (Old Regime):</span>
-                <span>₹{analysis['tax_old']:,}</span>
+                <span>₹{analysis.get('tax_old', 0):,}</span>
             </div>
              <div class="stat">
                 <span>Tax Liability (New Regime):</span>
-                <span>₹{analysis['tax_new']:,}</span>
+                <span>₹{analysis.get('tax_new', 0):,}</span>
             </div>
         </div>
-
-        <h2>Recommendations Applied</h2>
-        <p>Based on your profile and our chat, here is your optimized plan:</p>
-        <ul>
-            <li><strong>HRA Exemption:</strong> ₹{analysis['hra_exempt']:,} (Rent: ₹{profile.rent_annually:,})</li>
-            <li><strong>80C Investments:</strong> ₹{analysis['util_80c']:,} / ₹1,50,000</li>
-            <li><strong>Health Insurance (80D):</strong> ₹{profile.health_premium:,}</li>
-        </ul>
         
         <h2>Next Steps</h2>
         <ol>
