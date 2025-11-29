@@ -1,6 +1,7 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException
 from backend_sme.agents.gst_agent import run_gst_agent
 from backend_sme.models.schemas import GSTMatcherResponse
+from backend_sme.utils.file_parser import parse_file_content
 import shutil
 import os
 
@@ -32,26 +33,22 @@ async def run_gst_matching():
     
     try:
         files = os.listdir(UPLOAD_DIR)
+        combined_content = ""
+        
         for filename in files:
             file_path = os.path.join(UPLOAD_DIR, filename)
             if os.path.isfile(file_path):
-                content = ""
                 try:
-                    with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
-                        content = f.read()
-                except Exception:
-                    continue
-
-                # Naive heuristic for MVP
-                if "gstr" in filename.lower() or "2b" in filename.lower():
-                    gstr2b_content += content + "\n"
-                else:
-                    purchase_register_content += content + "\n"
+                    content = parse_file_content(file_path)
+                    combined_content += f"\n--- File: {filename} ---\n"
+                    combined_content += content
+                except Exception as e:
+                    print(f"Skipping file {filename}: {e}")
         
-        if not gstr2b_content and not purchase_register_content:
+        if not combined_content:
              return GSTMatcherResponse(missing_itc=[], total_itc_missed=0)
 
-        result = run_gst_agent(gstr2b_content, purchase_register_content)
+        result = run_gst_agent(combined_content)
         return result
         
     except Exception as e:

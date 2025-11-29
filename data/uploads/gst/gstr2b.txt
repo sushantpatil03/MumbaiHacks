@@ -1,0 +1,5 @@
+
+    GSTR-2B
+    Invoice: INV-001, Vendor: ABC Corp, Amount: 10000, Tax: 1800
+    Invoice: INV-002, Vendor: XYZ Ltd, Amount: 20000, Tax: 3600
+    
