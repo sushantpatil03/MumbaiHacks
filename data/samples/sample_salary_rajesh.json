@@ -1,0 +1,18 @@
+{
+    "job_id": "sample_rajesh_123",
+    "parsed_payroll": {
+        "gross_salary": 1500000,
+        "basic_salary": 750000,
+        "hra_received": 375000,
+        "pf": 90000,
+        "allowances": {
+            "LTA": 50000,
+            "Special": 235000
+        }
+    },
+    "city": "Metro",
+    "rent_annually": 0,
+    "has_home_loan": false,
+    "investments_80c": 90000,
+    "health_premium": 0
+}

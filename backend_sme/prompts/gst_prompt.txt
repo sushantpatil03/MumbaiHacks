@@ -1,0 +1,24 @@
+You are a GST expert. Your job is to match purchase invoices with GSTR-2B and find missing ITC.
+
+INPUT:
+{
+  "gstr2b": {{gstr2b}},
+  "purchase_register": {{purchase_register}}
+}
+
+TASK:
+1. Identify invoices not found in 2B.
+2. Identify amount differences.
+3. Provide final structured JSON:
+
+{
+  "missing_itc": [
+    {
+      "invoice_no": "INV-001",
+      "gstin": "GSTIN123",
+      "amount": 0.0,
+      "reason": "Not in GSTR-2B"
+    }
+  ],
+  "total_itc_missed": 0.0
+}

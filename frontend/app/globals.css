@@ -1,0 +1,91 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: hsl(222 47% 11%);
+  --color-foreground: hsl(210 40% 98%);
+
+  --color-card: hsl(222 47% 11%);
+  --color-card-foreground: hsl(210 40% 98%);
+
+  --color-popover: hsl(222 47% 11%);
+  --color-popover-foreground: hsl(210 40% 98%);
+
+  --color-primary: hsl(217 91% 60%);
+  --color-primary-foreground: hsl(222 47% 11%);
+
+  --color-secondary: hsl(217 19% 27%);
+  --color-secondary-foreground: hsl(210 40% 98%);
+
+  --color-muted: hsl(217 19% 27%);
+  --color-muted-foreground: hsl(215 20% 65%);
+
+  --color-accent: hsl(217 19% 27%);
+  --color-accent-foreground: hsl(210 40% 98%);
+
+  --color-destructive: hsl(0 62.8% 30.6%);
+  --color-destructive-foreground: hsl(210 40% 98%);
+
+  --color-border: hsl(217 19% 27%);
+  --color-input: hsl(217 19% 27%);
+  --color-ring: hsl(224 76% 48%);
+
+  --radius-lg: 0.75rem;
+  --radius-md: calc(0.75rem - 2px);
+  --radius-sm: calc(0.75rem - 4px);
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+
+  @keyframes accordion-down {
+    from {
+      height: 0
+    }
+
+    to {
+      height: var(--radix-accordion-content-height)
+    }
+  }
+
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height)
+    }
+
+    to {
+      height: 0
+    }
+  }
+}
+
+/* Custom Utilities */
+@layer utilities {
+  .glass-panel {
+    @apply bg-white/5 backdrop-blur-lg border border-white/10 shadow-xl;
+  }
+
+  .glass-card {
+    @apply bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-all duration-300;
+  }
+
+  .glass-input {
+    @apply bg-black/20 border-white/10 focus:border-primary/50 focus:ring-primary/50 text-white placeholder:text-white/40;
+  }
+
+  .glass-button {
+    @apply bg-primary/80 hover:bg-primary backdrop-blur-sm shadow-lg shadow-primary/20 transition-all;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    background: radial-gradient(circle at top left, #1e3a8a, transparent 40%),
+      radial-gradient(circle at bottom right, #4c1d95, transparent 40%),
+      #0f172a;
+    min-height: 100vh;
+  }
+}
