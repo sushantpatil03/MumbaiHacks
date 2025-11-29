@@ -1,51 +1,85 @@
 # TaxNova - Pitch Deck Content
 
 ## 🎬 Slide 1: Hook
-**"SMEs in India leave ₹2.8 Trillion on the table every year in missed tax deductions and unclaimed GST credits."**
+**"Indians leave ₹4 Trillion on the table every year in missed tax deductions, wrong regime choices, and unclaimed GST credits."**
 
-**TaxNova** is the AI-powered tax intelligence platform that recovers this lost money automatically.
+**TaxNova** is the AI-powered tax intelligence platform that recovers this lost money automatically for **Salaried Individuals** and **SMEs**.
 
 ---
 
 ## 💰 Slide 2: The Problem
 
-### SMEs Are Bleeding Money
+### Two Massive Markets, One Common Pain: Tax Complexity
+
+**SEGMENT 1: Salaried Individuals (50M+ tax filers in India)**
+
+- **₹15,000 - ₹50,000** lost annually per person due to:
+  - Wrong tax regime selection (Old vs. New)
+  - Missed HRA exemption calculations
+  - Incomplete 80C/80D deductions
+- **5-8 hours** wasted on ITR forms and CA consultations
+- **₹5,000 - ₹15,000** in CA fees for basic filing
+- **Confusion**: "Should I choose Old or New regime?" - Most choose wrong!
+
+**Real Impact:**
+> Software engineer earning ₹15 LPA paid ₹78,000 tax under New Regime. Could have saved ₹22,000 with Old Regime + proper HRA/80C planning. **Lost 28% in unnecessary tax!**
+
+---
+
+**SEGMENT 2: SMEs (7M+ businesses in India)**
+
 - **₹50,000 - ₹3,00,000** lost annually per business in missed deductions
-- **15-25%** of eligible ITC goes unclaimed
+- **15-25%** of eligible ITC goes unclaimed  
 - **40+ hours/month** wasted on manual compliance
 - **₹1,00,000+** spent on CA fees for basic tasks
 
-### Why This Happens
-1. **Complexity**: 70+ deduction sections in Income Tax Act
-2. **Manual Processes**: Excel-based GST reconciliation takes 8-15 hours monthly
-3. **Lack of Awareness**: Lesser-known deductions like R&D, employee training often ignored
-4. **Scale**: As transactions grow 10x, manual processes break down
+**Real Impact:**
+> A Pune manufacturing SME missed ₹2.8L in deductions for employee training, R&D, and equipment depreciation. A retail chain lost ₹1.2L in ITC due to vendor filing delays.
 
-### Real Impact
-> A Pune manufacturing SME missed ₹2.8L in deductions for employee training, R&D, and equipment depreciation. A retail chain lost ₹1.2L in ITC due to vendor filing delays and GSTIN errors.
+### Combined Market Pain: **₹4+ Trillion** lost annually across both segments!
 
 ---
 
 ## 💡 Slide 3: Our Solution
 
-**TaxNova = Virtual CA Assistant powered by Multi-Agent AI**
+**TaxNova = Virtual CA Assistant powered by Multi-Agent AI for EVERYONE**
 
 ### The Magic
-Upload documents → AI analyzes → Instant insights → Recover lost money
+
+**For Salaried (B2C):**
+Upload salary slip → AI chat guides you → Regime comparison → Tax savings + PDF report
+
+**For SMEs (B2B):**
+Upload business docs → AI analyzes → Find deductions + Reconcile GST → Recover lost money
 
 ### How We're Different
+- ✅ **Dual Segment Coverage** (Individuals + Businesses)
 - ✅ **Specialized AI Agents** (not generic chatbots)
-- ✅ **Evidence-Based** (every recommendation linked to your actual invoices)
+- ✅ **Evidence-Based** (every recommendation linked to actual data)
 - ✅ **Real-Time** (45 seconds vs 2-3 day CA turnaround)
 - ✅ **Context-Aware** (remembers conversation, understands follow-ups)
-- ✅ **Accurate** (97%+ accuracy vs 82% manual)
+- ✅ **Accurate** (97%+ vs 82% manual)
 
 ---
 
 ## 🤖 Slide 4: Technology - Multi-Agent AI Architecture
 
+**For Salaried Individuals:**
 ```
-User Query
+User Query: "Should I choose old or new regime?"
+    ↓
+Conversational CA Agent
+    ↓
+    ├→ HRA Calculator → Analyzes rent vs salary
+    ├→ 80C/80D Optimizer → Checks deductions
+    └→ Regime Comparator → Calculates both scenarios
+    ↓
+Personalized Recommendation: "Old Regime saves you ₹22K!"
+```
+
+**For SMEs:**
+```
+User Query: "Find deductions and check GST"
     ↓
 Orchestrator Agent (Routes to right specialist)
     ↓
@@ -57,19 +91,57 @@ Unified Response with Evidence
 ```
 
 ### Agents in Action
-1. **Orchestrator**: "Find deductions and check GST" → Routes to both agents in parallel
-2. **Document Parser**: Scanned PDF → Structured data in 30 seconds
-3. **Deduction Finder**: Identifies missed Section 80JJAA, 35, 32 deductions
-4. **GST Matcher**: Fuzzy matches 500 invoices, flags 12 missing ITCs
-5. **Chat Agent**: Maintains context → "Tell me more about #3" works seamlessly
+**Salaried Example:**
+- User: "I pay ₹20K rent, have ₹90K PF, ₹30K ELSS"
+- HRA Agent: Calculates ₹1.2L exemption
+- 80C Agent: "You used ₹120K, invest ₹30K more to max out"
+- Regime Agent: "Old saves you ₹18,500 vs New"
 
-**Powered by**: GPT-4, Claude, with custom Indian tax law knowledge base (20,000+ tokens)
+**SME Example:**  
+- Deduction Finder: Identifies missed Section 80JJAA, 35, 32
+- GST Matcher: Fuzzy matches 500 invoices, flags 12 missing ITCs
+- Chat Agent: "Your vendor ABC Industries hasn't filed GSTR-1 yet"
+
+**Powered by**: GPT-4, Claude, Gemini with 20,000+ token Indian tax law knowledge
 
 ---
 
-## ✨ Slide 5: Core Features
+## ✨Slide 5: Core Features
 
-### Feature 1: AI-Powered Deduction Finder 🔍
+### SALARIED INDIVIDUALS:
+
+#### Feature 1: Conversational CA Chat 💬
+**What**: AI chat that guides tax optimization through natural conversation
+
+**Example**:
+```
+User: Should I choose old or new regime?
+AI: Let me help! Do you pay rent?
+User: Yes, ₹20K/month
+AI: Any investments like ELSS, PPF?
+User: ₹90K PF + ₹30K ELSS
+AI: Based on your profile, Old Regime saves ₹18,500!
+```
+
+#### Feature 2: HRA Optimizer 🏠
+Calculates complex HRA exemption (3 rules, picks minimum)
+- Saves average ₹12,000/year in unnecessary taxable income
+
+#### Feature 3: Regime Comparator ⚖️
+Side-by-side Old vs New tax calculation
+- Shows ₹X saved by choosing right regime
+- 68% of users choose wrong regime without this!
+
+#### Feature 4: PDF Tax Plan 📄
+Professional CA-style report with action items
+- Share with HR for regime selection
+- Use during ITR filing
+
+---
+
+### SMEs:
+
+#### Feature 5: AI Deduction Finder 🔍
 **What**: Scans financial documents, identifies missed deductions, calculates tax savings
 
 **Example Output**:
