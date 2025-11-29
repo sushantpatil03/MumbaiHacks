@@ -1,5 +1,10 @@
 # TaxNova - AI Tax Intelligence for India 🇮🇳
 
+![WhatsApp Image 2025-11-29 at 11 50 39](https://github.com/user-attachments/assets/49407eb9-469c-4f8e-8306-29a1ea7174a2)
+![WhatsApp Image 2025-11-29 at 11 50 40](https://github.com/user-attachments/assets/e0840729-b232-4d8f-998a-f0e944f326a3)
+![WhatsApp Image 2025-11-29 at 11 50 41](https://github.com/user-attachments/assets/106fc205-bc1b-406a-9b2c-d1a002c1e936)
+
+
 > **Stop losing money to missed deductions. Let AI find your tax savings.**
 
 [![Next.js](https://img.shields.io/badge/Next.js-15-black)](https://nextjs.org/)
