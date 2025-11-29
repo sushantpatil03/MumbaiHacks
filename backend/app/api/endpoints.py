@@ -20,13 +20,36 @@ router = APIRouter()
 # In production, use Redis or a database
 profiles_db = {}
 
+# Persistence Logic
+DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "data", "profiles")
+os.makedirs(DATA_DIR, exist_ok=True)
+
+def save_profile(profile: UserProfile):
+    try:
+        with open(os.path.join(DATA_DIR, f"{profile.job_id}.json"), "w") as f:
+            f.write(profile.json())
+    except Exception as e:
+        logger.error(f"Failed to save profile: {e}")
+
+def load_profile(job_id: str) -> Optional[UserProfile]:
+    try:
+        path = os.path.join(DATA_DIR, f"{job_id}.json")
+        if os.path.exists(path):
+            with open(path, "r") as f:
+                return UserProfile.parse_raw(f.read())
+    except Exception as e:
+        logger.error(f"Failed to load profile: {e}")
+    return None
+
 @router.post("/upload")
 async def upload_document(
     file: Optional[UploadFile] = File(None),
     use_sample: str = Form("false"),
-    sample_name: str = Form("sample_salary_rajesh")
+    sample_name: str = Form("sample_salary_rajesh"),
+    name: str = Form(None),
+    tax_regime: str = Form(None)
 ):
-    print(f"DEBUG: file={file}, use_sample={use_sample}, sample_name={sample_name}")
+    print(f"DEBUG: file={file}, use_sample={use_sample}, sample_name={sample_name}, name={name}, regime={tax_regime}")
     use_sample_bool = use_sample.lower() == "true"
     job_id = str(uuid.uuid4())
     
@@ -82,6 +105,7 @@ async def upload_document(
     )
     
     # Sync Parsed Data to Knowledge Base for Agent Context
+    # Sync Parsed Data to Knowledge Base for Agent Context
     if parsed_payroll:
         profile.financial_knowledge_base.update({
             "gross_salary": parsed_payroll.gross_salary,
@@ -90,7 +114,14 @@ async def upload_document(
             "pf_deducted": parsed_payroll.pf,
             "allowances": parsed_payroll.allowances
         })
-        logger.info(f"Synced parsed payroll to knowledge base: {profile.financial_knowledge_base}")
+        
+    # Sync Onboarding Data (Name & Regime)
+    if name:
+        profile.financial_knowledge_base["name"] = name
+    if tax_regime:
+        profile.financial_knowledge_base["tax_regime"] = tax_regime
+        
+    logger.info(f"Synced initial data to knowledge base: {profile.financial_knowledge_base}")
     
     # Trigger Initial Greeting
     try:

@@ -29,7 +29,7 @@ export default function Home() {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center pt-8">
-          <Link href="/upload">
+          <Link href="/onboarding">
             <Button size="lg" className="h-14 px-8 text-lg rounded-full bg-white text-black hover:bg-white/90 shadow-xl shadow-white/10 transition-all hover:scale-105">
               Start Consultation <ArrowRight className="ml-2 w-5 h-5" />
             </Button>

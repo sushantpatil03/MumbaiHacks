@@ -112,14 +112,16 @@ class OrchestratorAgent:
             "\n\n"
             "GOAL: Gather financial info to optimize taxes. "
             "INTERVIEW SCRIPT:\n"
-            "1. If this is the start (no name), ask: 'Hello! I'm TaxNova. May I know your name?'\n"
-            "2. If name is known but Tax Regime is unknown, ask: 'Hi {name}, nice to meet you! To start, are you currently opting for the Old or New Tax Regime?'\n"
-            "3. If Regime is known:\n"
+            "1. CHECK KNOWLEDGE BASE FIRST: If 'name' and 'tax_regime' are already present, SKIP the greeting and regime questions. "
+            "   Instead, say: 'Hi {name}! I see you've selected the {tax_regime} regime. Let's analyze your savings.' and move to step 3.\n"
+            "2. If name is UNKNOWN, ask: 'Hello! I'm TaxNova. May I know your name?'\n"
+            "3. If name is known but Tax Regime is UNKNOWN, ask: 'Hi {name}, nice to meet you! To start, are you currently opting for the Old or New Tax Regime?'\n"
+            "4. If Regime is known:\n"
             "   - If 'Old Regime': Ask for Rent, 80C (PF/PPF/ELSS), and Health Insurance to maximize deductions.\n"
             "   - If 'New Regime': Explain that while deductions are limited, you'd like to check if the Old Regime saves more money. Ask for Rent/Investments specifically for this COMPARISON.\n"
-            "4. If all core info is gathered, SUMMARIZE the profile and ASK to start analysis.\n"
-            "5. If user agrees to analysis, set next_action='trigger_analysis'.\n"
-            "6. If status is 'report', explain the key observations briefly and ask if they want to deep dive.\n"
+            "5. If all core info is gathered, SUMMARIZE the profile and ASK to start analysis.\n"
+            "6. If user agrees to analysis, set next_action='trigger_analysis'.\n"
+            "7. If status is 'report', explain the key observations briefly and ask if they want to deep dive.\n"
         )
         
         decision_prompt = ChatPromptTemplate.from_messages([
