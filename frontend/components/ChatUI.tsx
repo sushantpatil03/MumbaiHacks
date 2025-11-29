@@ -39,7 +39,7 @@ export function ChatUI({ jobId, initialHistory = [], onUpdate }: ChatUIProps) {
         if (scrollRef.current) {
             scrollRef.current.scrollIntoView({ behavior: "smooth" })
         }
-    }, [messages])
+    }, [messages.length]) // Only scroll when message count changes
 
     const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {

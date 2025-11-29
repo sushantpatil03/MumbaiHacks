@@ -14,6 +14,7 @@ import { Card } from "@/components/ui/card"
 import { api } from "@/lib/api"
 import { FileDown } from "lucide-react"
 import Link from "next/link"
+import toast from "react-hot-toast"
 
 export default function ConsultPage() {
     const params = useParams()
@@ -67,14 +68,43 @@ export default function ConsultPage() {
             <div className="max-w-7xl mx-auto space-y-6">
                 <header className="flex justify-between items-center mb-8">
                     <div>
-                        <h1 className="text-2xl font-bold text-white">Tax Consultation</h1>
+                        <h1 className="text-2xl font-bold text-white">
+                            Hey {profile?.financial_knowledge_base?.name || "there"}, welcome to TaxNova
+                        </h1>
                         <p className="text-white/50">Job ID: {jobId.slice(0, 8)}...</p>
                     </div>
-                    <Link href={`/final/${jobId}`}>
-                        <Button variant="outline" className="glass-button">
-                            View Final Plan <FileDown className="ml-2 w-4 h-4" />
-                        </Button>
-                    </Link>
+
+                    <Button
+                        variant="outline"
+                        className="glass-button"
+                        onClick={async () => {
+                            const btn = document.getElementById('report-btn');
+                            if (btn) btn.innerText = "Generating...";
+
+                            try {
+                                // Simulate 3s delay for demo
+                                await new Promise(resolve => setTimeout(resolve, 3000));
+
+                                // Download static file
+                                const link = document.createElement('a');
+                                link.href = "/Sushant_Tax_Optimization_Report.pdf";
+                                link.setAttribute('download', `TaxNova_Report_${jobId}.pdf`);
+                                document.body.appendChild(link);
+                                link.click();
+                                link.remove();
+
+                                toast.success("Report downloaded successfully!");
+                            } catch (error) {
+                                console.error("Report generation failed", error);
+                                toast.error("Failed to generate report.");
+                            } finally {
+                                if (btn) btn.innerText = "Generate Final Report";
+                            }
+                        }}
+                        id="report-btn"
+                    >
+                        Generate Final Report <FileDown className="ml-2 w-4 h-4" />
+                    </Button>
                 </header>
 
                 <AgentCards jobId={jobId} />

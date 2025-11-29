@@ -41,7 +41,16 @@ export function AgentCards({ jobId }: { jobId: string }) {
         <div className="grid grid-cols-5 gap-2 mb-8">
             {agentList.map((agent) => {
                 const status = agents[agent.id]?.status || "idle"
-                const output = agents[agent.id]?.output || "Waiting..."
+                let output = agents[agent.id]?.output || "Waiting..."
+
+                // Custom status messages for better UX
+                if (status === "idle") {
+                    if (agent.id === "parser") output = "Waiting for document..."
+                    else if (agent.id === "interview") output = "Waiting for parser..."
+                    else if (agent.id === "observation") output = "Waiting for interview..."
+                    else if (agent.id === "optimizer") output = "Waiting for analysis..."
+                    else if (agent.id === "report") output = "Waiting for finalization..."
+                }
 
                 return (
                     <div
@@ -60,7 +69,7 @@ export function AgentCards({ jobId }: { jobId: string }) {
                             {status === "idle" && <Circle className="w-3 h-3 text-white/20" />}
                         </div>
                         <p className="text-xs font-medium text-white mb-0.5">{agent.name}</p>
-                        <p className="text-[10px] text-white/50 truncate">{output}</p>
+                        <p className="text-[10px] text-white/50 truncate" title={output}>{output}</p>
                     </div>
                 )
             })}

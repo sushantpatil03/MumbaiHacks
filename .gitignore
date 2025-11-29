@@ -79,6 +79,7 @@ backend/*.egg-info/
 
 # Installer logs
 pip-log.txt
+Sushant_Tax_Optimization_Report.pdf
 
 # Unit test / coverage
 backend/.pytest_cache/
