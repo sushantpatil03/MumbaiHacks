@@ -55,10 +55,21 @@ async def chat_endpoint(
             except Exception as e:
                 print(f"Error reading file {file.filename}: {e}")
 
-    # Run Orchestrator
+    # Add user message to history
+    session["history"].append({
+        "role": "user",
+        "content": message
+    })
+    
+    # Debug logging
+    print(f"[DEBUG] Session ID: {session_id}")
+    print(f"[DEBUG] Chat History Length: {len(session['history'])}")
+    print(f"[DEBUG] Chat History: {session['history']}")
+    
+    # Run Orchestrator with chat history
     from backend_sme.agents.orchestrator import run_orchestrator_agent
     
-    orchestrator_result = run_orchestrator_agent(message, file_preview if file_preview else "No files uploaded.")
+    orchestrator_result = run_orchestrator_agent(message, file_preview if file_preview else "No files uploaded.", session["history"])
     intent = orchestrator_result.intent
     print(f"Orchestrator Intent: {intent}")
 
@@ -70,8 +81,8 @@ async def chat_endpoint(
     if intent == "DEDUCTION_ANALYSIS":
         response_text = "I'm analyzing your documents for missed deductions..."
         try:
-            # Run Deduction Agent
-            result = run_deduction_agent(combined_input)
+            # Run Deduction Agent with chat history
+            result = run_deduction_agent(combined_input, session["history"])
             
             # Update Session Savings
             new_deductions = result.estimated_tax_saved
@@ -95,7 +106,7 @@ async def chat_endpoint(
         response_text = "I'm matching your GST documents..."
         try:
             # For GST, we ideally need 2 files. We'll pass what we have.
-            result = run_gst_agent(combined_input) 
+            result = run_gst_agent(combined_input, session["history"]) 
             
             new_itc = result.total_itc_missed
             session["savings"]["gstItcMissed"] += new_itc
@@ -119,5 +130,11 @@ async def chat_endpoint(
              response_text = f"I see you uploaded files. Based on my analysis, they don't look like standard financial documents I can process immediately. {orchestrator_result.reason}"
         else:
              response_text = "I can help you with Tax Deductions and GST Matching. Please upload your bank statements or GSTR files."
+
+    # Add assistant response to history
+    session["history"].append({
+        "role": "assistant",
+        "content": response_text
+    })
 
     return ChatResponse(message=response_text, savings_update=savings_update)
